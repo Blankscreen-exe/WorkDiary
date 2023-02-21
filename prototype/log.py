@@ -65,8 +65,22 @@ def export_by_date(date):
 if __name__ == '__main__':
     create_database()
 
-    parser = argparse.ArgumentParser(description='Work log')
-    parser.add_argument('action', nargs='?', default='log', choices=['log', 'export-all', 'export-date'], help='Action to perform')
+    parser = argparse.ArgumentParser(
+        description=setting['tool_description'],
+        formatter_class=argparse.RawTextHelpFormatter
+        )
+    parser.add_argument(
+        'action', 
+        nargs='?', 
+        default='log', 
+        choices=['log', 'export-all', 'export-date'], 
+        help=
+"""
+"log" to add a work log,
+"export-all" to export all work logs,
+"export-date" to export work logs for a specific date
+"""
+            )
     parser.add_argument('-d', '--date', dest='date', help='Date to export (dd-mm-yyyy)')
 
     args = parser.parse_args()
