@@ -66,8 +66,8 @@ if __name__ == '__main__':
     create_database()
 
     parser = argparse.ArgumentParser(description='Work log')
-    parser.add_argument('action', choices=['log', 'export-all', 'export-date'], help='Action to perform')
-    parser.add_argument('--date', help='Date to export (dd-mm-yyyy)')
+    parser.add_argument('action', nargs='?', default='log', choices=['log', 'export-all', 'export-date'], help='Action to perform')
+    parser.add_argument('-d', '--date', dest='date', help='Date to export (dd-mm-yyyy)')
 
     args = parser.parse_args()
 
@@ -81,3 +81,8 @@ if __name__ == '__main__':
             parser.print_usage()
             exit(1)
         export_by_date(args.date)
+    else:
+        print('Error: unrecognized action')
+        parser.print_usage()
+        exit(1)
+
