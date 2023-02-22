@@ -24,7 +24,7 @@ def log_work():
     c.execute('INSERT INTO work_log (name, description, date, time) VALUES (?, ?, ?, ?)', (name, desc, date, time))
     conn.commit()
     conn.close()
-    print('Work logged successfully.')
+    print('Work logged successfully @{} {}'.format(date, time))
 
 def export_all():
     conn = sqlite3.connect(DB_FILE)
