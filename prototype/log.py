@@ -67,7 +67,7 @@ if __name__ == '__main__':
     create_database()
 
     parser = argparse.ArgumentParser(
-        description=setting['tool_description'],
+        description= col.bold + col.fg.blue + '{}'.format(setting['tool_description']) + col.reset,
         formatter_class=argparse.RawTextHelpFormatter
         )
     parser.add_argument(
@@ -77,9 +77,9 @@ if __name__ == '__main__':
         choices=['log', 'export-all', 'export-date'], 
         help=
 """
-{} log {} to add a work log,
-{} export-all {} to export all work logs,
-{} export-date {} to export work logs for a specific date
+{} log {}           to add a work log
+{} export-all {}    to export all work logs
+{} export-date {}   to export work logs for a specific date
 """.format(col.bold+col.bg.cyan, 
            col.reset,
            col.bold+col.bg.cyan, 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
            col.reset,
            )
             )
-    parser.add_argument('-d', '--date', dest='date', help='Date to export (dd-mm-yyyy)')
+    parser.add_argument('-d', '--date', dest='date', help='Date to export {} (dd-mm-yyyy) {}'.format(col.bg.orange, col.reset))
 
     args = parser.parse_args()
 
