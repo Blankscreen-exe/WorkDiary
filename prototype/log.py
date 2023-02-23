@@ -3,6 +3,7 @@ import csv
 import sqlite3
 from datetime import datetime
 import os
+from colors import colors as col
 from settings import settings as setting
 
 DB_FILE = setting['db_dir']
@@ -24,7 +25,7 @@ def log_work():
     c.execute('INSERT INTO work_log (name, description, date, time) VALUES (?, ?, ?, ?)', (name, desc, date, time))
     conn.commit()
     conn.close()
-    print('Work logged successfully @{} {}'.format(date, time))
+    print(col.bold + col.fg.green + 'Work logged successfully @{} {}'.format(date, time) + col.reset)
 
 def export_all():
     conn = sqlite3.connect(DB_FILE)
@@ -41,7 +42,7 @@ def export_all():
         writer.writerow(['ID', 'Name', 'Description', 'Date', 'Time'])
         for row in rows:
             writer.writerow(row)
-    print('Work log exported successfully.')
+    print(col.bold + col.fg.green + 'Work log exported successfully' + col.reset)
 
 def export_by_date(date):
     timestamp = datetime.strptime(date, '%d-%m-%Y').strftime('%d-%m-%Y')
@@ -60,7 +61,7 @@ def export_by_date(date):
         writer.writerow(['ID', 'Name', 'Description', 'Date', 'Time'])
         for row in rows:
             writer.writerow(row)
-    print('Work log for date {} exported successfully.'.format(date))
+    print(col.bold + col.fg.green + 'Work log for date {} exported successfully.'.format(date) + col.reset)
 
 if __name__ == '__main__':
     create_database()
@@ -76,10 +77,16 @@ if __name__ == '__main__':
         choices=['log', 'export-all', 'export-date'], 
         help=
 """
-"log" to add a work log,
-"export-all" to export all work logs,
-"export-date" to export work logs for a specific date
-"""
+{} log {} to add a work log,
+{} export-all {} to export all work logs,
+{} export-date {} to export work logs for a specific date
+""".format(col.bold+col.bg.cyan, 
+           col.reset,
+           col.bold+col.bg.cyan, 
+           col.reset,
+           col.bold+col.bg.cyan, 
+           col.reset,
+           )
             )
     parser.add_argument('-d', '--date', dest='date', help='Date to export (dd-mm-yyyy)')
 
