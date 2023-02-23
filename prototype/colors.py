@@ -56,5 +56,5 @@ class colors:
             print('\n')
 
 
-col = colors()
-col.print_scheme()
+# col = colors()
+# col.print_scheme()
