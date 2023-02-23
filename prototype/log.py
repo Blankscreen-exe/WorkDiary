@@ -16,8 +16,8 @@ def create_database():
     conn.close()
 
 def log_work():
-    name = input('Task name: ')
-    desc = input('Description: ')
+    name = input('{}Task name:{} '.format(col.bg.blue,col.reset))
+    desc = input('{}Description:{} '.format(col.bg.blue,col.reset))
     date = datetime.now().strftime('%d-%m-%Y')
     time = datetime.now().strftime('%H:%M:%S')
     conn = sqlite3.connect(DB_FILE)
