@@ -26,6 +26,17 @@ def log_work():
     conn.commit()
     conn.close()
     print(col.bold + col.fg.green + '💾 Work logged successfully @{} {}'.format(date, time) + col.reset)
+    
+def status_today():
+    today = datetime.today().strftime('%d-%m-%Y')
+    
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute('SELECT COUNT(id) FROM work_log WHERE date = ?',(today,))
+    count = c.fetchone()[0]
+    conn.close()
+    
+    print(f'{col.fg.pink}Number of logs today({today}) => {col.bold + col.fg.lightgreen + str(count) + col.reset}')
 
 def export_all():
     conn = sqlite3.connect(DB_FILE)
@@ -70,23 +81,19 @@ if __name__ == '__main__':
         description= col.bold + col.fg.blue + '{}'.format(setting['tool_description']) + col.reset,
         formatter_class=argparse.RawTextHelpFormatter
         )
+    choices = ['log', 'export-all', 'export-date', 'status']
     parser.add_argument(
         'action', 
         nargs='?', 
         default='log', 
-        choices=['log', 'export-all', 'export-date'], 
+        choices=choices, 
         help=
 """
 {} log {}           to add a work log
 {} export-all {}    to export all work logs
 {} export-date {}   to export work logs for a specific date
-""".format(col.bold+col.bg.cyan, 
-           col.reset,
-           col.bold+col.bg.cyan, 
-           col.reset,
-           col.bold+col.bg.cyan, 
-           col.reset,
-           )
+{} status {}        get current day status
+""".format(*[col.bold+col.bg.cyan if i%2==0 else col.reset for i in range(len(choices)*2)])
             )
     parser.add_argument('-d', '--date', dest='date', help='🗓 Date to export {} (dd-mm-yyyy) {}'.format(col.bg.orange, col.reset))
 
@@ -102,6 +109,8 @@ if __name__ == '__main__':
             parser.print_usage()
             exit(1)
         export_by_date(args.date)
+    elif args.action == 'status':
+        status_today()
     else:
         print('Error: unrecognized action')
         parser.print_usage()
