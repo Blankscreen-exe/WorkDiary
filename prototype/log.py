@@ -25,7 +25,7 @@ def log_work():
     c.execute('INSERT INTO work_log (name, description, date, time) VALUES (?, ?, ?, ?)', (name, desc, date, time))
     conn.commit()
     conn.close()
-    print(col.bold + col.fg.green + 'Work logged successfully @{} {}'.format(date, time) + col.reset)
+    print(col.bold + col.fg.green + '💾 Work logged successfully @{} {}'.format(date, time) + col.reset)
 
 def export_all():
     conn = sqlite3.connect(DB_FILE)
@@ -42,7 +42,7 @@ def export_all():
         writer.writerow(['ID', 'Name', 'Description', 'Date', 'Time'])
         for row in rows:
             writer.writerow(row)
-    print(col.bold + col.fg.green + 'Work log exported successfully' + col.reset)
+    print(col.bold + col.fg.green + '🖨 Work log exported successfully' + col.reset)
 
 def export_by_date(date):
     timestamp = datetime.strptime(date, '%d-%m-%Y').strftime('%d-%m-%Y')
@@ -61,7 +61,7 @@ def export_by_date(date):
         writer.writerow(['ID', 'Name', 'Description', 'Date', 'Time'])
         for row in rows:
             writer.writerow(row)
-    print(col.bold + col.fg.green + 'Work log for date {} exported successfully.'.format(date) + col.reset)
+    print(col.bold + col.fg.green + '🖨 Work log for date {} exported successfully.'.format(date) + col.reset)
 
 if __name__ == '__main__':
     create_database()
@@ -88,7 +88,7 @@ if __name__ == '__main__':
            col.reset,
            )
             )
-    parser.add_argument('-d', '--date', dest='date', help='Date to export {} (dd-mm-yyyy) {}'.format(col.bg.orange, col.reset))
+    parser.add_argument('-d', '--date', dest='date', help='🗓 Date to export {} (dd-mm-yyyy) {}'.format(col.bg.orange, col.reset))
 
     args = parser.parse_args()
 
