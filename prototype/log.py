@@ -30,7 +30,7 @@ def status_today():
 def log_work():
     
     print("="*30)
-    print('\033[1;36;40m'+" "*5+'Welcome to your Logs\033[0m'+" "*5)
+    print('\033[1;36;40m'+" "*5+'Welcome to your Logs'+" "*5+"\033[0m")
     print("="*30)
     
     while True:
@@ -68,10 +68,13 @@ def log_work():
             conn.close()
             
             print("="*30)
-            print(f""," "*2,f"Log Entries of {timestamp}"," "*2)
+            print('\033[1;36;40m'+" "*2+f'Log Entries of {timestamp}'+" "*3+"\033[0m")
             print("="*30)
             for record in rows:
-                print(f"{record[0]} ==> {record[1]}")
+                print(f"{col.bg.lightgrey+col.fg.black+col.bold}RECORD ID:  {col.reset} {record[0]} {col.bg.lightgrey+col.fg.black+col.bold}TIME:{col.reset} {record[4]}")
+                print(f"{col.bg.lightgrey+col.fg.black+col.bold}TITLE:      {col.reset} {record[1]}")
+                print(f"{col.bg.lightgrey+col.fg.black+col.bold}DESCRIPTION:{col.reset} {record[2]}")
+                print("-"*30)
         # show today's status
         elif selection == 3 and isinstance(selection, int):
             status_today()
