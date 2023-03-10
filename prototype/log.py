@@ -68,7 +68,7 @@ def log_work():
             conn.close()
             
             print("="*30)
-            print('\033[1;36;40m'+" "*2+f'Log Entries of {timestamp}'+" "*3+"\033[0m")
+            print('\033[1;36;40m'+" "*1+f'📜 Log Entries of {timestamp}'+" "*1+"\033[0m")
             print("="*30)
             for record in rows:
                 print(f"{col.bg.lightgrey+col.fg.black+col.bold}RECORD ID:  {col.reset} {record[0]} {col.bg.lightgrey+col.fg.black+col.bold}TIME:{col.reset} {record[4]}")
