@@ -12,7 +12,7 @@ It only has simple functionality created using built-in python libraries.
 ```
 python3 log.py -h
 ```
-- To create a log entry
+- Start the main function. It has several options including: Create a log entry, print logs, check status etc
 ```
 python3 log.py
 ```
@@ -38,7 +38,8 @@ replace the dd-mm-yyyy with your own specific date
 ```
 python3 visualize.py
 ```
-
+## Preview
+![Alt text](docs/images/preview/Screenshot_1.png)
 ## Note
 
 This is still a prototype and I'm planning to include more functionality like GUI
