@@ -34,12 +34,13 @@ def log_work():
     print("="*30)
     
     while True:
-        print(f"""
-\033[43;31;1m 1 {col.reset} - log entry
-\033[43;31;1m 2 {col.reset} - list today's logs
-\033[43;31;1m 3 {col.reset} - check status
-\033[43;31;1m 4 {col.reset} - exit
-              """)
+        print(f"\033[43;31;1m      OPTIONS          {col.reset}")
+        print(f"\033[43;31;1m 1 {col.reset} - log entry")
+        print(f"\033[43;31;1m 2 {col.reset} - list today's logs")
+        print(f"\033[43;31;1m 3 {col.reset} - check status")
+        print(f"\033[43;31;1m 4 {col.reset} - exit")
+        print(f"\033[43;31;1m                       {col.reset}")
+              
         try:
             selection = eval(input(">> "))
         except:
