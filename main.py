@@ -1,7 +1,12 @@
 import PySimpleGUI as sg
 import os
 import json
-class shortcut_keeper():
+import csv
+import sqlite3
+from datetime import datetime
+
+DB_FILE = 'logs.db'
+class work_diary():
     """
     This class represents an app that allows users to register and view quick launch shortcuts.
     """
@@ -19,7 +24,140 @@ class shortcut_keeper():
                                 self.main_layout(), 
                                 icon=self.app_icon
                                 )
+        
+        # create table if not exists
+        self.create_database()
+        
+        # database config
+        self.today = datetime.today().strftime('%d-%m-%Y')
+        self.query_type_const = {
+            "all": "all",
+            "today": "today",
+            "sp_date": "sp_date",
+        }
+        
+        # export/import config
+        self.export_dir = "logs"
+        self.all_records_file_name = 'all_export.csv'
 
+    # ===============================================================
+    # ======================== Data Queries =========================
+    # ===============================================================
+    
+    def create_database(self):
+        conn = sqlite3.connect(DB_FILE)
+        curr = conn.cursor()
+        curr.execute('''CREATE TABLE IF NOT EXISTS work_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            name TEXT, 
+            scope TEXT, 
+            context TEXT, 
+            description TEXT, 
+            tags TEXT, 
+            date DATE, 
+            time TEXT)
+            ''')
+        conn.commit()
+        conn.close()
+    
+    def get_records(self, query_type="all", date=None):
+        """fetches records from the database base on the `query_type` param.
+        """
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+
+        if query_type == self.query_type_const["all"]:
+            c.execute('SELECT id, name, description, date, time FROM work_log')
+            rows = c.fetchall()
+        elif query_type == self.query_type_const["today"]:
+            c.execute('SELECT id, name, description, date, time FROM work_log WHERE date = ?', (self.today,))
+            rows = c.fetchall()
+        elif query_type == self.query_type_const["sp_date"] and date is not None:
+            c.execute('SELECT id, name, description, date, time FROM work_log WHERE date = ?', (date,))
+            rows = c.fetchall()
+        else:
+            raise AttributeError
+        
+        conn.close()
+        
+        return rows
+    
+    def insert_log(self, name, scope, context, description, tags):
+        """inserts a log into the database
+        """
+        # TODO: make variables for insert elements
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        c.execute('''INSERT INTO work_log (
+            name, 
+            scope,
+            context,
+            description,
+            tags, 
+            date, 
+            time
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)''', 
+            (name, scope, context, desc, tags, date, time))
+        conn.commit()
+        conn.close()
+        
+        return 1
+    
+    def get_log_count(self, query_type="all", date=None):
+        """gets count of logs based on `query_type` param
+        """
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        if query_type == self.query_type_const["all"]:
+            c.execute('SELECT COUNT(id) FROM work_log')
+            count = c.fetchone()[0]
+        elif query_type == self.query_type_const["today"]:
+            c.execute('SELECT COUNT(id) FROM work_log WHERE date = ?',(self.today,))
+            count = c.fetchone()[0]
+        elif query_type == self.query_type_const["sp_date"] and date is not None:
+            c.execute('SELECT COUNT(id) FROM work_log WHERE date = ?',(date,))
+            count = c.fetchone()[0]
+        else:
+            raise AttributeError
+            
+        conn.close()
+        
+        return count
+    
+    # ===============================================================
+    # ======================== Export/Import ========================
+    # ===============================================================
+
+    def export_csv(self, query_type="all", date=None):
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        if query_type == self.query_type_const["all"]:
+            result = self.get_records()            
+        elif query_type == self.query_type_const["today"]:
+            result = self.get_records(query_type=self.query_type_const["today"])            
+        elif query_type == self.query_type_const["sp_date"]:
+            # TODO: fill in date
+            result = self.get_records(query_type=self.query_type_const["sp_date"], date=False)            
+        else:  
+            raise AttributeError
+        
+        if not os.path.exists(export_dir):
+            os.makedirs(export_dir)
+
+        with open(os.path.join(export_dir, self.all_records_file_name), 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(['ID', 'Name', 'Scope', 'Context', 'Description', 'Tags', 'Date', 'Time'])
+            for row in result:
+                writer.writerow(row)
+        
+    # ===============================================================
+    # =========================== Layouts ===========================
+    # ===============================================================
+    
     def main_layout(self) -> list:
         """config for displaying tabs
 
@@ -42,10 +180,11 @@ class shortcut_keeper():
             [sg.Text("Scope:", text_color="blue"), sg.Input(key="-SCOPE-", pad=(10, 10))],
             [sg.Text("Description:", text_color="green"), sg.Multiline(size=(40, 10), key="-DESCRIPTION-", pad=(10, 10))],
             [sg.Text("Tags:", text_color="purple"), sg.Input(key="-TAGS-", pad=(10, 10))],
-            [sg.Button("Submit", key="-SUBMIT-", button_color=("white", "green"), pad=((300, 0), 10), justification='right')]
+            [sg.Button("Submit", key="-SUBMIT-", button_color=("white", "green"), pad=((300, 0), 10))]
         ]
     
     def view_layout(self) -> list:
+        data = self.get_records()
         return [
            [sg.Table(values=data, headings=["ID", "Name", "Scope", "Context", "Description", "Tags", "Date", "Time"],
               background_color='blue', text_color='white', auto_size_columns=True,
@@ -88,7 +227,11 @@ class shortcut_keeper():
             [sg.Text("🔗 https://github.com/Blankscreen-exe", enable_events=True, font=("Consolas", 12),
                      text_color='#0F3FD8', background_color='#B2C00D', key="-ABOUT-LINK-")]
         ]
-        
+    
+    # ===============================================================
+    # ======================== Main Method ==========================
+    # ===============================================================
+    
     def main(self) -> None:
         """Main window loop to start this app
         """
@@ -146,5 +289,5 @@ class shortcut_keeper():
 
 
 if __name__ == '__main__':
-    App = shortcut_keeper()
+    App = work_diary()
     App.main()
