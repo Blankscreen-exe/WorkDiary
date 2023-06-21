@@ -2,15 +2,15 @@
 
 ## Attributes:
 
-🔴 db_filename = 'log.db'
+🔴 **db_filename** = 'log.db'
 
-🔴 db_filepath = path.join('.', 'log.db')
+🔴 **db_filepath** = path.join('.', 'log.db')
 
-🔴 export_filename_prefix = 'work_log_('
+🔴 **export_filename_prefix** = 'work_log_('
 
-🔴 export_filename_suffix = ')'
+🔴 **export_filename_suffix** = ')'
 
-🔴 export_filepath = path.join('.', 'exports')
+🔴 **export_filepath** = path.join('.', 'exports')
 
 ## Methods:
 
