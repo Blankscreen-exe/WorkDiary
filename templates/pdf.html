@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* CSS styling for the report */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+  <!-- Page 1: Title page -->
+  <div class="page-break">
+    <div class="title-info-section">
+        <h1>{{ title_page['title'] }}</h1>
+        <h2>{{ title_page['report_name'] }} Report</h2>
+    </div>
+    <footer class="title-footer-section">
+        <hr/>
+        <div>
+            <!--TODO: insert link to a static page-->
+            <span>report produced by: <a href="https://github.com/Blankscreen-exe/WorkDiary">Work Diary</a></span>
+        </div>
+    </footer>
+  </div>
+
+  <!-- Page 2: Table page -->
+  <div class="page-break">
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Scope</th>
+          <th>Context</th>
+          <th>Description</th>
+          <th>Tags</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in table_data %}
+        <tr>
+          <td>{{ row.task }}</td>
+          <td>{{ row.scope }}</td>
+          <td>{{ row.context }}</td>
+          <td>{{ row.description }}</td>
+          <td>{{ row.tags }}</td>
+          <td>{{ row.date }}</td>
+          <td>{{ row.time }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 3: Charts page -->
+  <!--TODO: enable charts when they are being recieved from app-->
+  {% comment %} <div class="page-break">
+    <div class="chart-container">
+      <!-- Render your charts/graphs here using appropriate HTML/JS libraries -->
+      <h2>Chart 1</h2>
+      <div id="chart1"></div>
+      <!-- Add more charts as needed -->
+    </div>
+  </div> {% endcomment %}
+
+</body>
+</html>
