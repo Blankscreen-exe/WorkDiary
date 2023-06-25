@@ -47,7 +47,7 @@ This is still a prototype and I'm planning to include more functionality like GU
 ## Further Development
 - [ ] export logs to cloud storage
 - [ ] retrieve logs from cloud storage
-- [ ] add `logtype`, `log context`, `tags (comma separated)` field(s) to database (used for log classification while data munging)
+- [x] add `logtype`, `log context`, `tags (comma separated)` field(s) to database (used for log classification while data munging)
 - [ ] add GUI support (probably `PySimpleGUI` for now)
 - [ ] prompt to log after every set time interval
 - [ ] generate log summary in PDF
