@@ -94,7 +94,7 @@ class App(work_diary):
         """
         return [
             [
-                sg.Text("📜 About Shortcut Keeper", font=self.section_title_font),
+                sg.Text("📜 About Work Diary", font=self.section_title_font),
                 sg.Text("(v0.1)", font=self.section_normal_font)
             ],
             [sg.HorizontalSeparator()],
@@ -112,6 +112,7 @@ class App(work_diary):
                      font=self.section_normal_font)],
             [sg.Text("For more information, please visit:",
                      font=self.section_normal_font)],
+            # TODO: add app landing page link or github readme
             [sg.Text("🔗 https://github.com/Blankscreen-exe", enable_events=True, font=("Consolas", 12),
                      text_color='#0F3FD8', background_color='#B2C00D', key="-ABOUT-LINK-")]
         ]
