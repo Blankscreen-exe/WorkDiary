@@ -4,6 +4,9 @@ import csv
 import sqlite3
 from datetime import datetime
 
+from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
+import pdfkit
+
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -188,6 +191,39 @@ class work_diary:
             writer.writerow(['ID', 'Name', 'Scope', 'Context', 'Description', 'Tags', 'Date', 'Time'])
             for row in result:
                 writer.writerow(row)
+        
+    # ===============================================================
+    # ========================== Reporting ==========================
+    # ===============================================================
+    
+    def render_pdf_report(self, report_data, title_data):
+        """renders an HTML report from template
+        """
+        # TODO: test this
+        env = Environment(
+            loader=FileSystemLoader(os.path.join('.','test','pdf.html')),
+            autoescape=select_autoescape()
+        )
+
+        template = env.get_template(os.path.join('.','test','pdf.html'))
+        
+        # TODO: do visualizations and send them into context
+        
+        context = {
+            "title_data" : title_data,
+            "report_data" : report_data,
+        }
+        
+        rendered_template = template.render(c=context)
+        
+        return rendered_template
+    
+    def convert_to_pdf(self, html_template):
+        """converts html templates to pdf
+        """
+        # TODO: rename the output file accordingly
+        pdfkit.from_string(html_template, os.path.join('', 'out.pdf'))
+        
         
     # ===============================================================
     # ========================== Send Email =========================
