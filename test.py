@@ -44,6 +44,10 @@ class work_diary_tests(unittest.TestCase):
                 tags=f"baking, cooking, kitchen"
                 )
     
+    def test_read_records(self):
+        data = api.get_records()
+        self.assertEqual(len(data), 30)
+    
     def test_get_log_count(self):
         count = api.get_log_count(query_type="all")
         self.assertEqual(count, 30)
@@ -52,6 +56,7 @@ class work_diary_tests(unittest.TestCase):
         self.assertEqual(count, 30)
         
         count = api.get_log_count(query_type="sp_date", date="22-06-2023")
+        print(count)
         self.assertEqual(count, 30)
         
     def test_update_record(self):
