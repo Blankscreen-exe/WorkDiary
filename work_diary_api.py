@@ -17,7 +17,7 @@ class work_diary:
     
     def __init__(self):
         # database settings
-        self.db_filename = 'log_test.db'
+        self.db_filename = 'logs.db'
         self.db_filepath = os.path.join('.')
         
         # database config
@@ -68,7 +68,8 @@ class work_diary:
         """
         today_date = datetime.today().strftime('%d-%m-%Y')
         
-        conn = sqlite3.connect(os.path.join(self.db_filepath, self.db_filename))
+        # conn = sqlite3.connect(os.path.join(self.db_filepath, self.db_filename))
+        conn = sqlite3.connect(self.db_filename)
         c = conn.cursor()
 
         if query_type == self.query_type_const["all"]:
@@ -149,14 +150,18 @@ class work_diary:
         if query_type == self.query_type_const["all"]:
             c.execute('SELECT COUNT(id) FROM work_log')
             count = c.fetchone()[0]
+            print('SELECT COUNT(id) FROM work_log')
         elif query_type == self.query_type_const["today"]:
             c.execute('SELECT COUNT(id) FROM work_log WHERE date = ?',(today_date,))
             count = c.fetchone()[0]
+            print('SELECT COUNT(id) FROM work_log WHERE date = ?',(today_date,))
         elif query_type == self.query_type_const["sp_date"] and date is not None:
             c.execute('SELECT COUNT(id) FROM work_log WHERE date = ?',(date,))
             count = c.fetchone()[0]
+            print('SELECT COUNT(id) FROM work_log WHERE date = ?',(date,))
         else:
             raise AttributeError
+        
             
         conn.close()
         
