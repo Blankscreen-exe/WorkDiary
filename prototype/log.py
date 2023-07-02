@@ -12,7 +12,19 @@ DB_FILE = setting['db_dir']
 def create_database():
     conn = sqlite3.connect(DB_FILE)
     curr = conn.cursor()
-    curr.execute('CREATE TABLE IF NOT EXISTS work_log (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, date DATE, time TEXT)')
+    curr.execute('''
+                 CREATE TABLE IF NOT EXISTS work_log 
+                 (
+                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                     scope TEXT,
+                     context TEXT,
+                     name TEXT, 
+                     description TEXT, 
+                     tags TEXT,
+                     date DATE, 
+                     time TEXT
+                 )
+                 ''')
     conn.commit()
     conn.close()
 
@@ -49,12 +61,24 @@ def log_work():
         # logs entry
         if selection == 1 and isinstance(selection,int):
             name = input('{}Task name:{} '.format(col.bg.blue,col.reset))
+            scope = input('{}Scope:{} '.format(col.bg.blue,col.reset))
+            context = input('{}Context:{} '.format(col.bg.blue,col.reset))
             desc = input('{}Description:{} '.format(col.bg.blue,col.reset))
+            tags = input('{}Tags:{} '.format(col.bg.blue,col.reset))
             date = datetime.now().strftime('%d-%m-%Y')
             time = datetime.now().strftime('%H:%M:%S')
             conn = sqlite3.connect(DB_FILE)
             c = conn.cursor()
-            c.execute('INSERT INTO work_log (name, description, date, time) VALUES (?, ?, ?, ?)', (name, desc, date, time))
+            c.execute('''INSERT INTO work_log (
+                name,
+                scope,
+                context, 
+                description,
+                tags, 
+                date, 
+                time
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)''', 
+                (name, scope, context, desc, tags, date, time))
             conn.commit()
             conn.close()
             print(col.bold + col.fg.green + '💾 Work logged successfully @{} {}'.format(date, time) + col.reset)
